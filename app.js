@@ -6,7 +6,7 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 
 var index = require("./routes/index");
-var books = require("./routes/books");
+var booksRoute = require("./routes/books");
 
 const connectMongoDB = require("./db/mongodbConnection")
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", index);
-app.use("/books", books);
+app.use("/books", booksRoute);
 
 connectMongoDB();
 

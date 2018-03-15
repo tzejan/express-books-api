@@ -1,34 +1,34 @@
 var express = require("express");
-const Book = require("../models/books");
+const Book = require("../models/book");
 var router = express.Router();
 
 /* GET books listing. */
-router.get("/", async function(req, res) {
+router.get("/", async function(req, res, next) {
   try {
     let result = await Book.find({});
     console.log(result);
     res.json(result);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send({ messsage: `${error.message}` });
+    next(error);
   }
 
   // res.json({ message: "respond with all books" });
 });
 
-router.get("/:id", async function(req, res) {
+router.get("/:id", async function(req, res, next) {
   try {
     let result = await Book.find({ _id: req.params.id });
     console.log(result);
     res.json(result);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send({ messsage: `${error.message}` });
+    next(error);
   }
   // res.json({ message: `get book with id ${req.params.id}` });
 });
 
-router.post("/", async function(req, res) {
+router.post("/", async function(req, res, next) {
   try {
     let newBook = new Book({ name: req.body.name, author: req.body.author });
     await newBook.save();
@@ -39,11 +39,11 @@ router.post("/", async function(req, res) {
     });
   } catch (error) {
     console.error("Book can't be created");
-    res.status(500).send("Error creating book");
+    next(error);
   }
 });
 
-router.put("/:id", async function(req, res) {
+router.put("/:id", async function(req, res, next) {
   try {
     let updatedDetails = { name: req.body.name, author: req.body.author };
     let result = await Book.findByIdAndUpdate(req.params.id, updatedDetails, { new: true });
@@ -51,12 +51,12 @@ router.put("/:id", async function(req, res) {
     res.json(result);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send({ messsage: `${error.message}` });
+    next(error);
   }
   // res.json({ message: `update book with id ${req.params.id}` });
 });
 
-router.delete("/:id", async function(req, res) {
+router.delete("/:id", async function(req, res, next) {
   try {
     let result = await Book.deleteOne({ _id: req.params.id });
     console.log(result);
@@ -67,7 +67,7 @@ router.delete("/:id", async function(req, res) {
     }
   } catch (error) {
     console.error(error.message);
-    res.status(500).send({ messsage: `${error.message}` });
+    next(error);
   }
   // res.json({ message: `delete book with id ${req.params.id}` });
 });
